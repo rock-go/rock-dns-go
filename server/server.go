@@ -30,8 +30,12 @@ func (s *server) Name() string {
 	return s.cfg.Name
 }
 
+func (s *server) CodeVM() string {
+	return s.cfg.co.CodeVM()
+}
+
 func (s *server) Start() error {
-	fd := &dns.Server{Addr: s.cfg.Bind.Hostname(), Net: s.cfg.Bind.Scheme(), Handler: s}
+	fd := &dns.Server{Addr: s.cfg.Bind.Host(), Net: s.cfg.Bind.Scheme(), Handler: s}
 	var err error
 	xEnv.Spawn(100, func() {
 		err = fd.ListenAndServe()

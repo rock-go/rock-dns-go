@@ -51,14 +51,14 @@ func (s *server) Less(i , j int) bool {
 	w2 := s.cfg.route[j].weight
 
 	if w1 == 0 {
-		return false
+		return true
 	}
 
 	if w2 == 0 {
 		return true
 	}
 
-	return w1 < w2
+	return w1 > w2
 }
 
 func (s *server) Swap(i , j int) {
@@ -95,5 +95,6 @@ func (s *server) addRoute(_ *lua.LState , name string , val lua.LValue) {
 	}
 
 	r.compile()
+	s.cfg.route = append(s.cfg.route , r)
 	sort.Sort(s)
 }

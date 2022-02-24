@@ -18,9 +18,26 @@ func (s *server) toL(L *lua.LState) int {
 	return 0
 }
 
+func (s *server) startL(L *lua.LState) int {
+	if s.CodeVM() != L.CodeVM() {
+		L.RaiseError("%s must be %s run" , s.Name() , s.CodeVM())
+		return 0
+	}
+
+	xEnv.Start(s , func(err error) {
+		L.RaiseError("%v" , err)
+	})
+
+	return 0
+}
+
 func (s *server) Index(L *lua.LState , key string) lua.LValue {
 	switch key {
-	case "on":
+
+	case "start":
+		return L.NewFunction(s.startL)
+
+	case "pipe":
 		return L.NewFunction(s.pipeL)
 	case "to":
 		return L.NewFunction(s.toL)
